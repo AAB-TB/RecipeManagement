@@ -1,21 +1,19 @@
 -- Create Users table with unique constraint on email
 CREATE TABLE Users (
     UserId INT PRIMARY KEY IDENTITY(1,1),
-    Username VARCHAR(255) NOT NULL,
+    Username VARCHAR(255) NOT NULL UNIQUE, -- Added UNIQUE constraint
     PasswordHash VARCHAR(255) NOT NULL, -- Assuming you'll store hashed passwords
-    EncryptedPassword VARBINARY(MAX), -- Example for data encryption
-    Email VARCHAR(255) NOT NULL,
-    Role VARCHAR(50) NOT NULL DEFAULT 'User', -- User role by default
+    Email VARCHAR(255) NOT NULL UNIQUE, -- Added UNIQUE constraint
+    Role VARCHAR(20) NOT NULL DEFAULT 'User', -- User role by default
     CreatedAt DATETIME2 DEFAULT GETDATE(),
     UpdatedAt DATETIME2 DEFAULT GETDATE(),
-    CONSTRAINT UC_Email UNIQUE (Email),
     CONSTRAINT CK_UserRole CHECK (Role IN ('User', 'Admin'))
 );
 
 -- Create Categories table
 CREATE TABLE Categories (
     CategoryId INT PRIMARY KEY IDENTITY(1,1),
-    CategoryName VARCHAR(255) NOT NULL,
+    CategoryName VARCHAR(255) NOT NULL UNIQUE, -- Added UNIQUE constraint
     CreatedAt DATETIME2 DEFAULT GETDATE(),
     UpdatedAt DATETIME2 DEFAULT GETDATE()
 );
@@ -31,6 +29,7 @@ CREATE TABLE Recipes (
     ImagePath VARCHAR(255),
     CreatedAt DATETIME2 DEFAULT GETDATE(),
     UpdatedAt DATETIME2 DEFAULT GETDATE(),
+    UNIQUE (UserId, Title), -- Added UNIQUE constraint
     FOREIGN KEY (UserId) REFERENCES Users(UserId),
     FOREIGN KEY (CategoryId) REFERENCES Categories(CategoryId)
 );
@@ -50,7 +49,7 @@ CREATE TABLE Ratings (
 -- Create Logging table
 CREATE TABLE Logging (
     LogId INT PRIMARY KEY IDENTITY(1,1),
-    UserId INT, -- Add UserId if you want to associate logs with users
+    UserId INT,
     LogMessage TEXT,
     LogLevel VARCHAR(20), -- Info, Warning, Error, etc.
     CreatedAt DATETIME2 DEFAULT GETDATE()
