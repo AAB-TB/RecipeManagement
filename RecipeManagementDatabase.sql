@@ -39,12 +39,13 @@ CREATE TABLE Ratings (
     RatingId INT PRIMARY KEY IDENTITY(1,1),
     RecipeId INT,
     UserId INT,
-    Rating INT CHECK (Rating BETWEEN 1 AND 5),
+    RatingValue INT CHECK (RatingValue BETWEEN 1 AND 5), 
     CreatedAt DATETIME2 DEFAULT GETDATE(),
     UpdatedAt DATETIME2 DEFAULT GETDATE(),
     FOREIGN KEY (RecipeId) REFERENCES Recipes(RecipeId),
     FOREIGN KEY (UserId) REFERENCES Users(UserId)
 );
+
 
 -- Create Logging table
 CREATE TABLE Logging (
