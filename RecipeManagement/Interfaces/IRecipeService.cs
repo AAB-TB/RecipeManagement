@@ -7,12 +7,12 @@ namespace RecipeManagement.Interfaces
     {
 
         Task<IEnumerable<RecipeDto>> GetAllRecipesAsync();
-        Task<RecipeDto> CreateRecipeAsync(int userId, RecipeDto recipeDto);
+        Task<CreateRecipeDto> CreateRecipeAsync(int userId, int categoryId, CreateRecipeDto createRecipeDto);
         Task<RecipeDto> GetRecipeByIdAsync(int recipeId);
         Task<RecipeDto> GetRecipeByTitleAsync(string recipeTitle);
-        Task<IEnumerable<CategoryDto>> GetRecipesByCategoryName(string categoryName);
+        Task<IEnumerable<RecipeDto>> GetRecipesByCategoryName(string categoryName);
         Task UpdateRecipeAsync(int userId, int recipeId, UpdateRecipeDto updateRecipeDto);
-        Task<bool> DeleteRecipeAsync(int userId, int recipeId);
+        Task DeleteRecipeAsync(int userId, int recipeId);
 
     }
 }

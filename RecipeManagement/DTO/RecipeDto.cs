@@ -9,7 +9,7 @@
         public string ImagePath { get; set; }
 
         // You might want to add properties for Category and User information
-        public CategoryDto Category { get; set; }
-        public UserDto User { get; set; }
+        public CreateCategoryDto Category { get; set; }
+        public UserProfileDto User { get; set; }
     }
 }

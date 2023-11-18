@@ -18,44 +18,250 @@ namespace RecipeManagement.Repositories
             _mapper = mapper;
         }
 
-        public async Task<RecipeDto> CreateRecipeAsync(int userId, RecipeDto recipeDto)
+        public async Task<CreateRecipeDto> CreateRecipeAsync(int userId, int categoryId, CreateRecipeDto createRecipeDto)
         {
-            throw new NotImplementedException();
+            try
+            {
+                // Map the DTO to the entity
+                var recipeEntity = _mapper.Map<Recipe>(createRecipeDto);
+
+                // Set the UserID and CategoryID based on the provided parameters
+                recipeEntity.UserID = userId;
+                recipeEntity.CategoryID = categoryId;
+
+                // Define your SQL query
+                var query = @"
+            INSERT INTO Recipes (UserID, Title, Description, Ingredients, CategoryID, ImagePath)
+            VALUES (@UserID, @Title, @Description, @Ingredients, @CategoryID, @ImagePath);
+            SELECT CAST(SCOPE_IDENTITY() as int);";
+                Console.WriteLine($"SQL Query: {query}");
+                using (var connection = _dapperConnection.GetDbConnection())
+                {
+                    // Execute the query and retrieve the generated ID
+                    var recipeId = await connection.QuerySingleAsync<int>(query, recipeEntity);
+
+                    
+                    return createRecipeDto;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception (log, throw, etc.)
+                Console.WriteLine(ex.ToString());
+                throw;
+            }
         }
 
-        public async Task<bool> DeleteRecipeAsync(int userId, int recipeId)
+        public async Task DeleteRecipeAsync(int userId, int recipeId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                // Define your SQL query
+                var query = "DELETE FROM Recipes WHERE UserID = @UserId AND RecipeID = @RecipeId;";
+
+                using (var connection = _dapperConnection.GetDbConnection())
+                {
+                    // Execute the query
+                    await connection.ExecuteAsync(query, new { UserId = userId, RecipeId = recipeId });
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception (log, throw, etc.)
+                throw;
+            }
         }
 
         public async Task<IEnumerable<RecipeDto>> GetAllRecipesAsync()
         {
-            throw new NotImplementedException();
+            try
+            {
+                // Define your SQL query
+                var query = @"
+            SELECT r.*, u.*, c.*
+            FROM Recipes r
+            INNER JOIN Users u ON r.UserID = u.UserID
+            INNER JOIN Categories c ON r.CategoryID = c.CategoryID;";
+
+                using (var connection = _dapperConnection.GetDbConnection())
+                {
+                    // Execute the query and return the results
+                     var recipes = await connection.QueryAsync<RecipeDto, UserProfileDto, CreateCategoryDto, RecipeDto>(
+                query,
+                (recipe, user, category) =>
+                {
+                    recipe.User = user;
+                    recipe.Category = category;
+                    return recipe;
+                },
+                splitOn: "UserID,CategoryID"
+);
+                    return recipes;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception (log, throw, etc.)
+                throw;
+            }
         }
 
         public async Task<RecipeDto> GetRecipeByIdAsync(int recipeId)
         {
-            throw new NotImplementedException();
-        }
+            try
+            {
+                // Define your SQL query with an inner join
+                var query = @"
+    SELECT r.*, u.*, c.*
+    FROM Recipes r
+    INNER JOIN Users u ON r.UserID = u.UserID
+    INNER JOIN Categories c ON r.CategoryID = c.CategoryID
+    WHERE r.RecipeID = @RecipeId;";
 
+                using (var connection = _dapperConnection.GetDbConnection())
+                {
+                    // Execute the query and return the result
+                    var recipes = await connection.QueryAsync<RecipeDto, UserProfileDto, CreateCategoryDto, RecipeDto>(
+                        query,
+                        (recipe, user, category) =>
+                        {
+                            recipe.User = user;
+                            recipe.Category = category;
+                            return recipe;
+                        },
+                        new { RecipeId = recipeId },
+                        splitOn: "UserID,CategoryID"
+                    );
+
+                    // Since you're fetching a recipe by its ID, you may want to use FirstOrDefault
+                    return recipes.FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception (log, throw, etc.)
+                throw;
+            }
+        }
         public async Task<RecipeDto> GetRecipeByTitleAsync(string recipeTitle)
         {
-            throw new NotImplementedException();
+            try
+            {
+                // Define your SQL query to get the recipe by title and join with Users and Categories tables
+                var query = @"
+            SELECT r.*, u.*, c.*
+            FROM Recipes r
+            INNER JOIN Users u ON r.UserID = u.UserID
+            INNER JOIN Categories c ON r.CategoryID = c.CategoryID
+            WHERE r.Title = @RecipeTitle;";
+
+                using (var connection = _dapperConnection.GetDbConnection())
+                {
+                    // Execute the query and return the result
+                    var recipe = await connection.QueryAsync<RecipeDto, UserProfileDto, CreateCategoryDto, RecipeDto>(
+                        query,
+                        (recipe, user, category) =>
+                        {
+                            recipe.User = user;
+                            recipe.Category = category;
+                            return recipe;
+                        },
+                        new { RecipeTitle = recipeTitle },
+                        splitOn: "UserID,CategoryID"
+                    );
+
+                    return recipe.FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception (log, throw, etc.)
+                throw;
+            }
         }
 
-        public async Task<IEnumerable<CategoryDto>> GetRecipesByCategoryName(string categoryName)
+
+        public async Task<IEnumerable<RecipeDto>> GetRecipesByCategoryName(string categoryName)
         {
-            throw new NotImplementedException();
+            try
+            {
+                // Define your SQL query to get the Category by name and join with Recipes and Users tables
+                var query = @"
+            SELECT r.*, u.*, c.*
+            FROM Recipes r
+            INNER JOIN Users u ON r.UserID = u.UserID
+            INNER JOIN Categories c ON r.CategoryID = c.CategoryID
+            WHERE c.CategoryName = @CategoryName;";
+
+                using (var connection = _dapperConnection.GetDbConnection())
+                {
+                    // Execute the query and retrieve the results
+                    var recipes = await connection.QueryAsync<RecipeDto, UserProfileDto, CreateCategoryDto, RecipeDto>(
+                        query,
+                        (recipe, user, category) =>
+                        {
+                            recipe.User = user;
+                            recipe.Category = category;
+                            return recipe;
+                        },
+                        new { CategoryName = categoryName },
+                        splitOn: "UserID,CategoryID"
+                    );
+
+                    return recipes;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception (log, throw, etc.)
+                throw;
+            }
         }
 
-        public async Task UpdateRecipeAsync(int userId, int recipeId, RecipeDto recipeDto)
+
+        public async Task UpdateRecipeAsync(int userId, int recipeId, UpdateRecipeDto updateRecipeDto)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using (var connection = _dapperConnection.GetDbConnection())
+                {
+                    // Fetch the CategoryID based on the new category name
+                    var newCategoryQuery = "SELECT CategoryID FROM Categories WHERE CategoryName = @CategoryName;";
+                    var newCategoryId = await connection.QueryFirstOrDefaultAsync<int>(newCategoryQuery, new { CategoryName = updateRecipeDto.Category.CategoryName });
+
+                    if (newCategoryId == default)
+                    {
+                        // Handle the case where the new category doesn't exist
+                        // You can throw an exception, log a message, or handle it based on your requirements
+                        throw new InvalidOperationException("The specified category does not exist.");
+                    }
+
+                    // Map the DTO to the entity
+                    var recipeEntity = _mapper.Map<Recipe>(updateRecipeDto);
+
+                    // Set the UserID and RecipeID based on the provided parameters
+                    recipeEntity.UserID = userId;
+                    recipeEntity.RecipeID = recipeId;
+
+                    // Set the new CategoryID
+                    recipeEntity.CategoryID = newCategoryId;
+
+                    // Define your SQL query
+                    var query = @"
+                UPDATE Recipes
+                SET Title = @Title, Description = @Description, Ingredients = @Ingredients, ImagePath = @ImagePath, CategoryID = @CategoryID
+                WHERE UserID = @UserID AND RecipeID = @RecipeID;";
+
+                    // Execute the query and return whether any rows were affected
+                    var affectedRows = await connection.ExecuteAsync(query, recipeEntity);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception (log, throw, etc.)
+                throw;
+            }
         }
 
-        public Task UpdateRecipeAsync(int userId, int recipeId, UpdateRecipeDto updateRecipeDto)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
