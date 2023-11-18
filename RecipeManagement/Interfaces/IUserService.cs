@@ -1,13 +1,19 @@
 ﻿using RecipeManagement.DTO;
+using RecipeManagement.Model;
 
 namespace RecipeManagement.Interfaces
 {
     public interface IUserService
     {
-        public Task<int> CreateUserAsync(UserDto userDto);
-        public Task<UserDto> AuthenticateUserAsync(string username, string password);
-        public Task<bool> UpdateUserAsync(int userId, UserDto userDto);
-        public Task<bool> DeleteUserAsync(int userId);
+        Task<IEnumerable<UserDto>> GetAllUsersAsync();
+        Task<UserDto> CreateUserAsync(UserDto userDto);
+        Task<UserDto> GetUserByIdAsync(int userId);
+        Task<UserDto> GetUserByUsernameAsync(string username);
+        Task<UserDto> GetUserByEmailAsync(string email);
+        Task<bool> UpdateUserAsync(int userId, UserDto userDto);
+        Task<bool> DeleteUserAsync(int userId);
+        Task<UserDto> AuthenticateUserAsync(User user);
+
 
     }
 }

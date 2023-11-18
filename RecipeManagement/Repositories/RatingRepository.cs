@@ -1,22 +1,44 @@
-﻿using RecipeManagement.Data;
+﻿using AutoMapper;
+using Dapper;
+using RecipeManagement.Data;
 using RecipeManagement.DTO;
 using RecipeManagement.Interfaces;
+using RecipeManagement.Model;
 
 namespace RecipeManagement.Repositories
 {
     public class RatingRepository : IRatingService
     {
-        private readonly DapperContext _context;
-        public RatingRepository(DapperContext context)
+        private readonly DapperConnection _dapperConnection;
+        private readonly IMapper _mapper;
+
+        public RatingRepository(DapperConnection dapperConnection, IMapper mapper)
         {
-            _context = context;
+            _dapperConnection = dapperConnection;
+            _mapper = mapper;
         }
-        public Task<IEnumerable<RatingDto>> GetRatingsAsync(int recipeId)
+
+        public async Task<RatingDto> CreateRateRecipeAsync(int userId, int recipeId, RatingDto ratingDto)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> RateRecipeAsync(int userId, int recipeId, int rating)
+        public async Task DeleteRatingAsync(int userId, int ratingId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<IEnumerable<RatingDto>> GetRatingsByRecipeIdAsync(int recipeId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<IEnumerable<RatingDto>> GetRecipesByRatingValueAsync(int ratingValue)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task UpdateRatingAsync(int userId, int ratingId, RatingDto ratingDTO)
         {
             throw new NotImplementedException();
         }

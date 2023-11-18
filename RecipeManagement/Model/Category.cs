@@ -2,12 +2,10 @@
 {
     public class Category
     {
-        public int CategoryId { get; set; }
+        public int CategoryID { get; set; }
         public string CategoryName { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
 
-        // Navigation property
+        // Navigation property for one-to-many relationship
         public ICollection<Recipe> Recipes { get; set; }
     }
 }

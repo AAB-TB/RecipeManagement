@@ -2,10 +2,9 @@
 {
     public class RatingDto
     {
-        public int RatingId { get; set; }
         public int RatingValue { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
-
+        // You might want to add properties for RecipeCreator and RatedRecipe
+        public UserDto RecipeCreator { get; set; }
+        public RecipeDto RatedRecipe { get; set; }
     }
 }

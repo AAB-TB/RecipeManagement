@@ -1,32 +1,54 @@
-﻿using RecipeManagement.Data;
+﻿using AutoMapper;
+using Dapper;
+using RecipeManagement.Data;
 using RecipeManagement.DTO;
 using RecipeManagement.Interfaces;
+using RecipeManagement.Model;
 
 namespace RecipeManagement.Repositories
 {
     public class RecipeRepository : IRecipeService
     {
-        private readonly DapperContext _context;
-        public RecipeRepository(DapperContext context)
+        private readonly DapperConnection _dapperConnection;
+        private readonly IMapper _mapper;
+
+        public RecipeRepository(DapperConnection dapperConnection, IMapper mapper)
         {
-            _context = context;
+            _dapperConnection = dapperConnection;
+            _mapper = mapper;
         }
-        public Task<int> CreateRecipeAsync(int userId, RecipeDto recipeDto)
+
+        public async Task<RecipeDto> CreateRecipeAsync(int userId, RecipeDto recipeDto)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> DeleteRecipeAsync(int userId, int recipeId)
+        public async Task<bool> DeleteRecipeAsync(int userId, int recipeId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<RecipeDto>> SearchRecipesAsync(string title)
+        public async Task<IEnumerable<RecipeDto>> GetAllRecipesAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> UpdateRecipeAsync(int userId, int recipeId, RecipeDto recipeDto)
+        public async Task<RecipeDto> GetRecipeByIdAsync(int recipeId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<RecipeDto> GetRecipeByTitleAsync(string recipeTitle)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<IEnumerable<CategoryDto>> GetRecipesByCategoryName(string categoryName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task UpdateRecipeAsync(int userId, int recipeId, RecipeDto recipeDto)
         {
             throw new NotImplementedException();
         }

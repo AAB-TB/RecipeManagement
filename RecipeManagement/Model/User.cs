@@ -2,17 +2,14 @@
 {
     public class User
     {
-        public int UserId { get; set; }
+        public int UserID { get; set; }
         public string Username { get; set; }
-        public string PasswordHash { get; set; }
+        public string Password { get; set; }
         public string Email { get; set; }
-        public string Role { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        public string UserRole { get; set; }
 
-        // Navigation properties
+        // Navigation property for one-to-many relationship
         public ICollection<Recipe> Recipes { get; set; }
         public ICollection<Rating> Ratings { get; set; }
-        public ICollection<Logging> Loggings { get; set; }
     }
 }

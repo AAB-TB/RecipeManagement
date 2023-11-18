@@ -8,17 +8,13 @@ namespace RecipeManagement.Automapper
     {
         public MappingProfiles()
         {
-           
+            
             CreateMap<User, UserDto>().ReverseMap();
             CreateMap<Category, CategoryDto>().ReverseMap();
-            CreateMap<Recipe, RecipeDto>()
-                .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category))
-                .ForMember(dest => dest.Ratings, opt => opt.MapFrom(src => src.Ratings))
-                .ReverseMap();
+            CreateMap<Recipe, RecipeDto>().ReverseMap();
             CreateMap<Rating, RatingDto>().ReverseMap();
-            CreateMap<Logging, LoggingDto>().ReverseMap();
 
-           
+            
         }
     }
 }

@@ -1,63 +1,45 @@
--- Create Users table with unique constraint on email
+-- Users Table
 CREATE TABLE Users (
-    UserId INT PRIMARY KEY IDENTITY(1,1),
-    Username VARCHAR(255) NOT NULL UNIQUE, -- Added UNIQUE constraint
-    PasswordHash VARCHAR(255) NOT NULL, -- Assuming you'll store hashed passwords
-    Email VARCHAR(255) NOT NULL UNIQUE, -- Added UNIQUE constraint
-    Role VARCHAR(20) NOT NULL DEFAULT 'User', -- User role by default
-    CreatedAt DATETIME2 DEFAULT GETDATE(),
-    UpdatedAt DATETIME2 DEFAULT GETDATE(),
-    CONSTRAINT CK_UserRole CHECK (Role IN ('User', 'Admin'))
+    UserID INT PRIMARY KEY IDENTITY(1,1),
+    Username NVARCHAR(50) NOT NULL,
+    Password NVARCHAR(50) NOT NULL,
+    Email NVARCHAR(100) NOT NULL,
+    UserRole NVARCHAR(20) DEFAULT 'Ordinary' CHECK (UserRole IN ('Ordinary', 'Admin')),
+    CONSTRAINT Unique_Username UNIQUE (Username),
+    CONSTRAINT Unique_Email UNIQUE (Email)
 );
 
--- Create Categories table
+-- Categories Table
 CREATE TABLE Categories (
-    CategoryId INT PRIMARY KEY IDENTITY(1,1),
-    CategoryName VARCHAR(255) NOT NULL UNIQUE, -- Added UNIQUE constraint
-    CreatedAt DATETIME2 DEFAULT GETDATE(),
-    UpdatedAt DATETIME2 DEFAULT GETDATE()
+    CategoryID INT PRIMARY KEY IDENTITY(1,1),
+    CategoryName NVARCHAR(50) NOT NULL
 );
 
--- Create Recipes table with ImagePath
+-- Recipes Table
 CREATE TABLE Recipes (
-    RecipeId INT PRIMARY KEY IDENTITY(1,1),
-    UserId INT,
-    Title VARCHAR(255) NOT NULL,
-    Description TEXT,
-    Ingredients TEXT,
-    CategoryId INT,
-    ImagePath VARCHAR(255),
-    CreatedAt DATETIME2 DEFAULT GETDATE(),
-    UpdatedAt DATETIME2 DEFAULT GETDATE(),
-    UNIQUE (UserId, Title), -- Added UNIQUE constraint
-    FOREIGN KEY (UserId) REFERENCES Users(UserId),
-    FOREIGN KEY (CategoryId) REFERENCES Categories(CategoryId)
+    RecipeID INT PRIMARY KEY IDENTITY(1,1),
+    Title NVARCHAR(100) NOT NULL,
+    Description NVARCHAR(MAX),
+    Ingredients NVARCHAR(MAX),
+    CategoryID INT,
+    UserID INT,
+    ImagePath NVARCHAR(MAX),
+    CONSTRAINT FK_Category FOREIGN KEY (CategoryID) REFERENCES Categories(CategoryID),
+    CONSTRAINT FK_User FOREIGN KEY (UserID) REFERENCES Users(UserID)
 );
 
--- Create Ratings table
+-- Ratings Table
 CREATE TABLE Ratings (
-    RatingId INT PRIMARY KEY IDENTITY(1,1),
-    RecipeId INT,
-    UserId INT,
-    RatingValue INT CHECK (RatingValue BETWEEN 1 AND 5), 
-    CreatedAt DATETIME2 DEFAULT GETDATE(),
-    UpdatedAt DATETIME2 DEFAULT GETDATE(),
-    FOREIGN KEY (RecipeId) REFERENCES Recipes(RecipeId),
-    FOREIGN KEY (UserId) REFERENCES Users(UserId)
+    RatingID INT PRIMARY KEY IDENTITY(1,1),
+    RecipeCreatorID INT, -- The user ID who created the recipe
+    RatingValue INT CHECK (RatingValue >= 1 AND RatingValue <= 5),
+    RatedRecipeID INT, -- The ID of the recipe being rated
+    RatingUserID INT, -- The user ID who is giving the rating
+    CONSTRAINT FK_RecipeCreator FOREIGN KEY (RecipeCreatorID) REFERENCES Users(UserID),
+    CONSTRAINT FK_RatedRecipe FOREIGN KEY (RatedRecipeID) REFERENCES Recipes(RecipeID),
+    CONSTRAINT FK_RatingUser FOREIGN KEY (RatingUserID) REFERENCES Users(UserID),
+    CONSTRAINT Check_RatingUserNotRecipeCreator CHECK (RatingUserID != RecipeCreatorID)
 );
 
-
--- Create Logging table
-CREATE TABLE Logging (
-    LogId INT PRIMARY KEY IDENTITY(1,1),
-    UserId INT,
-    LogMessage TEXT,
-    LogLevel VARCHAR(20), -- Info, Warning, Error, etc.
-    CreatedAt DATETIME2 DEFAULT GETDATE()
-);
-
--- Index foreign key columns for better performance
-CREATE INDEX IX_Recipes_UserId ON Recipes (UserId);
-CREATE INDEX IX_Recipes_CategoryId ON Recipes (CategoryId);
-CREATE INDEX IX_Ratings_RecipeId ON Ratings (RecipeId);
-CREATE INDEX IX_Ratings_UserId ON Ratings (UserId);
+-- Indexes for better query performance
+CREATE INDEX idx_RecipeTitle ON Recipes (Title);
