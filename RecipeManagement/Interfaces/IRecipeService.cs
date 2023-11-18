@@ -11,7 +11,7 @@ namespace RecipeManagement.Interfaces
         Task<RecipeDto> GetRecipeByIdAsync(int recipeId);
         Task<RecipeDto> GetRecipeByTitleAsync(string recipeTitle);
         Task<IEnumerable<CategoryDto>> GetRecipesByCategoryName(string categoryName);
-        Task UpdateRecipeAsync(int userId, int recipeId, RecipeDto recipeDto);
+        Task UpdateRecipeAsync(int userId, int recipeId, UpdateRecipeDto updateRecipeDto);
         Task<bool> DeleteRecipeAsync(int userId, int recipeId);
 
     }

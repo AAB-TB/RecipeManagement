@@ -18,12 +18,12 @@ namespace RecipeManagement.Repositories
             _mapper = mapper;
         }
 
-        public async Task<CategoryDto> CreateCategoryAsync(CategoryDto categoryDto)
+        public async Task<CreateCategoryDto> CreateCategoryAsync(CreateCategoryDto createCategoryDto)
         {
             try
             {
                 // Map the DTO to the entity
-                var categoryEntity = _mapper.Map<Category>(categoryDto);
+                var categoryEntity = _mapper.Map<Category>(createCategoryDto);
 
                 // Define your SQL query
                 var query = @"
@@ -36,7 +36,7 @@ namespace RecipeManagement.Repositories
                     // Execute the query and retrieve the generated ID
                     var categoryId = await connection.QuerySingleAsync<int>(query, categoryEntity);
 
-                    return categoryDto;
+                    return createCategoryDto;
                 }
             }
             catch (Exception ex)
@@ -114,12 +114,12 @@ namespace RecipeManagement.Repositories
             }
         }
 
-        public async Task UpdateCategoryAsync(int categoryId, CategoryDto categoryDto)
+        public async Task UpdateCategoryAsync(int categoryId, UpdateCategoryDto updateCategoryDto)
         {
             try
             {
                 // Map the DTO to the entity
-                var categoryEntity = _mapper.Map<Category>(categoryDto);
+                var categoryEntity = _mapper.Map<Category>(updateCategoryDto);
 
                 // Set the CategoryID from the method parameter
                 categoryEntity.CategoryID = categoryId;

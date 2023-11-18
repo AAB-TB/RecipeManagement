@@ -7,8 +7,8 @@ namespace RecipeManagement.Interfaces
     {
         Task<IEnumerable<CategoryDto>> GetAllCategoriesAsync();
         Task<CategoryDto> GetCategoryByIdAsync(int categoryId);
-        Task<CategoryDto> CreateCategoryAsync(CategoryDto categoryDto);
-        Task UpdateCategoryAsync(int categoryId, CategoryDto categoryDto);
+        Task<CreateCategoryDto> CreateCategoryAsync(CreateCategoryDto categoryDto);
+        Task UpdateCategoryAsync(int categoryId, UpdateCategoryDto updateCategoryDto);
         Task DeleteCategoryAsync(int categoryId);
 
     }

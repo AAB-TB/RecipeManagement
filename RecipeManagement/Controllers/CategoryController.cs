@@ -40,11 +40,11 @@ namespace RecipeManagement.Controllers
 
         // POST: api/Category
         [HttpPost]
-        public async Task<ActionResult<CategoryDto>> CreateCategory([FromBody] CategoryDto categoryDto)
+        public async Task<ActionResult<CreateCategoryDto>> CreateCategory([FromBody] CreateCategoryDto createcategoryDto)
         {
             try
             {
-                var createdCategory = await _categoryService.CreateCategoryAsync(categoryDto);
+                var createdCategory = await _categoryService.CreateCategoryAsync(createcategoryDto);
                 return createdCategory;
             }
             catch (Exception ex)
@@ -56,11 +56,11 @@ namespace RecipeManagement.Controllers
 
         // PUT: api/Category/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCategory(int id, [FromBody] CategoryDto categoryDto)
+        public async Task<IActionResult> UpdateCategory(int id, [FromBody] UpdateCategoryDto updateCategoryDto)
         {
             try
             {
-                await _categoryService.UpdateCategoryAsync(id, categoryDto);
+                await _categoryService.UpdateCategoryAsync(id, updateCategoryDto);
                 return NoContent();
             }
             catch (Exception ex)

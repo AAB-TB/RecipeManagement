@@ -52,5 +52,10 @@ namespace RecipeManagement.Repositories
         {
             throw new NotImplementedException();
         }
+
+        public Task UpdateRecipeAsync(int userId, int recipeId, UpdateRecipeDto updateRecipeDto)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
