@@ -218,6 +218,42 @@ namespace RecipeManagement.Repositories
             }
         }
 
+        public async Task<IEnumerable<RecipeDto>> GetRecipesByUsernameAsync(string username)
+        {
+            try
+            {
+                // Define your SQL query
+                var query = @"
+            SELECT r.*, u.*, c.*
+            FROM Recipes r
+            INNER JOIN Users u ON r.UserID = u.UserID
+            INNER JOIN Categories c ON r.CategoryID = c.CategoryID
+            WHERE u.Username = @Username;";
+
+                using (var connection = _dapperConnection.GetDbConnection())
+                {
+                    // Execute the query and return the results
+                    var recipes = await connection.QueryAsync<RecipeDto, UserProfileDto, CreateCategoryDto, RecipeDto>(
+                        query,
+                        (recipe, user, category) =>
+                        {
+                            recipe.User = user;
+                            recipe.Category = category;
+                            return recipe;
+                        },
+                        new { Username = username },
+                        splitOn: "UserID,CategoryID"
+                    );
+
+                    return recipes;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception (log, throw, etc.)
+                throw;
+            }
+        }
 
         public async Task UpdateRecipeAsync(int userId, int recipeId, UpdateRecipeDto updateRecipeDto)
         {

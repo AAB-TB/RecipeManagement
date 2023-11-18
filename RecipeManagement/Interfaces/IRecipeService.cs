@@ -7,6 +7,7 @@ namespace RecipeManagement.Interfaces
     {
 
         Task<IEnumerable<RecipeDto>> GetAllRecipesAsync();
+        Task<IEnumerable<RecipeDto>> GetRecipesByUsernameAsync(string username);
         Task<CreateRecipeDto> CreateRecipeAsync(int userId, int categoryId, CreateRecipeDto createRecipeDto);
         Task<RecipeDto> GetRecipeByIdAsync(int recipeId);
         Task<RecipeDto> GetRecipeByTitleAsync(string recipeTitle);

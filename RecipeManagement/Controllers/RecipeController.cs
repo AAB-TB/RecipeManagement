@@ -15,7 +15,21 @@ namespace RecipeManagement.Controllers
         {
             _recipeService = recipeService;
         }
-        
+
+        [HttpGet("recipesByUser/{username}")]
+        public async Task<ActionResult<IEnumerable<RecipeDto>>> GetRecipesByUsername(string username)
+        {
+            try
+            {
+                var recipes = await _recipeService.GetRecipesByUsernameAsync(username);
+                return Ok(recipes);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error retrieving recipes");
+            }
+        }
+
         [HttpPost("{userId}/{categoryId}")]
         public async Task<ActionResult<CreateRecipeDto>> CreateRecipe(int userId, int categoryId, [FromBody] CreateRecipeDto createRecipeDto)
         {
