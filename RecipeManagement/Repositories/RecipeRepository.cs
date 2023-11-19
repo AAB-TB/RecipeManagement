@@ -40,7 +40,7 @@ namespace RecipeManagement.Repositories
                     // Execute the query and retrieve the generated ID
                     var recipeId = await connection.QuerySingleAsync<int>(query, recipeEntity);
 
-                    
+
                     return createRecipeDto;
                 }
             }
@@ -78,24 +78,29 @@ namespace RecipeManagement.Repositories
             {
                 // Define your SQL query
                 var query = @"
-            SELECT r.*, u.*, c.*
+            SELECT r.*, u.*, c.*, ra.*
             FROM Recipes r
             INNER JOIN Users u ON r.UserID = u.UserID
-            INNER JOIN Categories c ON r.CategoryID = c.CategoryID;";
+            INNER JOIN Categories c ON r.CategoryID = c.CategoryID
+            LEFT JOIN Ratings ra ON r.RecipeID = ra.RatedRecipeID;";
 
                 using (var connection = _dapperConnection.GetDbConnection())
                 {
                     // Execute the query and return the results
-                     var recipes = await connection.QueryAsync<RecipeDto, UserProfileDto, CreateCategoryDto, RecipeDto>(
-                query,
-                (recipe, user, category) =>
-                {
-                    recipe.User = user;
-                    recipe.Category = category;
-                    return recipe;
-                },
-                splitOn: "UserID,CategoryID"
-);
+                    var recipes = await connection.QueryAsync<RecipeDto, UserProfileDto, CreateCategoryDto, RaterProfileDto, RecipeDto>(
+                        query,
+                        (recipe, user, category, rating) =>
+                        {
+                            recipe.User = user;
+                            recipe.Category = category;
+                            if (rating != null)
+                            {
+                                recipe.Ratings = rating ;
+                            }
+                            return recipe;
+                        },
+                        splitOn: "UserID,CategoryID,RatingID"
+                    );
                     return recipes;
                 }
             }

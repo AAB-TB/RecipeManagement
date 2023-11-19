@@ -24,8 +24,10 @@ CREATE TABLE Recipes (
     CategoryID INT,
     UserID INT,
     ImagePath NVARCHAR(MAX),
+    RatingID INT,
     CONSTRAINT FK_Category FOREIGN KEY (CategoryID) REFERENCES Categories(CategoryID),
-    CONSTRAINT FK_User FOREIGN KEY (UserID) REFERENCES Users(UserID)
+    CONSTRAINT FK_User FOREIGN KEY (UserID) REFERENCES Users(UserID),
+    CONSTRAINT FK_Rating FOREIGN KEY (RatingID) REFERENCES Ratings(RatingID)
 );
 
 -- Ratings Table
@@ -37,8 +39,7 @@ CREATE TABLE Ratings (
     RatingUserID INT, -- The user ID who is giving the rating
     CONSTRAINT FK_RecipeCreator FOREIGN KEY (RecipeCreatorID) REFERENCES Users(UserID),
     CONSTRAINT FK_RatedRecipe FOREIGN KEY (RatedRecipeID) REFERENCES Recipes(RecipeID),
-    CONSTRAINT FK_RatingUser FOREIGN KEY (RatingUserID) REFERENCES Users(UserID),
-    CONSTRAINT Check_RatingUserNotRecipeCreator CHECK (RatingUserID != RecipeCreatorID)
+    CONSTRAINT FK_RatingUser FOREIGN KEY (RatingUserID) REFERENCES Users(UserID)
 );
 
 -- Indexes for better query performance

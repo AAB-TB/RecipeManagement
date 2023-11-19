@@ -9,6 +9,6 @@
 
         // You might want to add properties for Category and User information
         public UpdateCategoryDto Category { get; set; }
-        
+
     }
 }

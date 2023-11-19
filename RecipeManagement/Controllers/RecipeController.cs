@@ -37,7 +37,7 @@ namespace RecipeManagement.Controllers
             {
                 var createdRecipe = await _recipeService.CreateRecipeAsync(userId, categoryId, createRecipeDto);
 
-                return  createdRecipe;
+                return createdRecipe;
             }
             catch (Exception ex)
             {

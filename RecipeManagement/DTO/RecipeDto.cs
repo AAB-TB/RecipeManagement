@@ -11,5 +11,7 @@
         // You might want to add properties for Category and User information
         public CreateCategoryDto Category { get; set; }
         public UserProfileDto User { get; set; }
+
+        public RaterProfileDto Ratings { get; set; }
     }
 }

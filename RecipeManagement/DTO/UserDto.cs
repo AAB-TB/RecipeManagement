@@ -11,5 +11,7 @@
         // You might want to add properties for Recipes and Ratings
         public ICollection<RecipeDto> Recipes { get; set; }
         public ICollection<RatingDto> Ratings { get; set; }
+
+
     }
 }

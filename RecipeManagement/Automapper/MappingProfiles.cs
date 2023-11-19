@@ -14,6 +14,7 @@ namespace RecipeManagement.Automapper
             CreateMap<User, UpdateUserDto>().ReverseMap();
             CreateMap<User, LoginUserDto>().ReverseMap();
             CreateMap<User, UserProfileDto>().ReverseMap();
+            //CreateMap<User, UserIdDto>().ReverseMap();
 
 
             CreateMap<Category, CategoryDto>().ReverseMap();
@@ -28,6 +29,7 @@ namespace RecipeManagement.Automapper
             CreateMap<Rating, RatingDto>().ReverseMap();
             CreateMap<Rating, CreateRatingDto>().ReverseMap();
             CreateMap<Rating, UpdateRatingDto>().ReverseMap();
+            CreateMap<Rating, RaterProfileDto>().ReverseMap();
 
 
 
